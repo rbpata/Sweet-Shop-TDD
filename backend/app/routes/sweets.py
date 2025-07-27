@@ -28,3 +28,12 @@ def add_sweet():
     except Exception as e:
         db.session.rollback()
         return jsonify(msg="Failed to add sweet"), 500
+
+@sweet_bp.route("", methods=["GET"])
+@jwt_required()
+def get_sweets():
+    sweets = Sweet.query.all()
+    return jsonify([{
+        "id": s.id, "name": s.name, "category": s.category,
+        "price": s.price, "quantity": s.quantity
+    } for s in sweets])
