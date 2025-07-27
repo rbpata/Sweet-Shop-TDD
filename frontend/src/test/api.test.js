@@ -1,3 +1,36 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { authAPI, sweetsAPI, inventoryAPI } from '../services/api'
+
+// Mock the entire api module
+vi.mock('../services/api', () => {
+  const mockApi = {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+  }
+
+  return {
+    authAPI: {
+      register: vi.fn(),
+      login: vi.fn(),
+    },
+    sweetsAPI: {
+      getAllSweets: vi.fn(),
+      searchSweets: vi.fn(),
+      addSweet: vi.fn(),
+      updateSweet: vi.fn(),
+      deleteSweet: vi.fn(),
+    },
+    inventoryAPI: {
+      purchaseSweet: vi.fn(),
+      restockSweet: vi.fn(),
+    },
+  }
+})
+
+
+
 describe('API Services', () => {
   beforeEach(() => {
     vi.clearAllMocks()
