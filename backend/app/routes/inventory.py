@@ -19,3 +19,22 @@ def purchase(id):
     except Exception as e:
         db.session.rollback()
         return jsonify(msg="Purchase failed"), 500
+
+@inventory_bp.route("/<int:id>/restock", methods=["POST"])
+@jwt_required()
+def restock(id):
+    try:
+        # Get additional claims to check admin status
+        claims = get_jwt()
+        is_admin = claims.get('is_admin', False)
+            
+        if not is_admin:
+            return jsonify(msg="Admin only"), 403
+            
+        sweet = Sweet.query.get_or_404(id)
+        sweet.quantity += 1
+        db.session.commit()
+        return jsonify(msg="Restocked successfully"), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(msg="Restock failed"), 500
