@@ -77,3 +77,19 @@ def test_purchase_sweet(client, admin_token):
         # Check quantity was reduced
         updated_sweet = Sweet.query.get(sweet.id)
         assert updated_sweet.quantity == initial_quantity - 1
+
+def test_purchase_out_of_stock(client, admin_token):
+    with client.application.app_context():
+        # Create a sweet with 0 quantity
+        out_of_stock_sweet = Sweet(name='OutOfStock', category='Test', price=10.0, quantity=0)
+        db.session.add(out_of_stock_sweet)
+        db.session.commit()
+        
+        # Using /api/inventory to match blueprint registration
+        response = client.post(
+            f"/api/inventory/{out_of_stock_sweet.id}/purchase", 
+            headers={"Authorization": f"Bearer {admin_token}"}
+        )
+        
+        assert response.status_code == 400
+        assert response.get_json()["msg"] == "Out of stock"
