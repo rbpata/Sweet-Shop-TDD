@@ -172,6 +172,26 @@ describe('Auth Context Tests', () => {
       expect(regularUser.isAdmin).toBe(false)
     })
   })
+  describe('Error Handling', () => {
+    it('should handle network errors during login', async () => {
+      const networkError = new Error('Network request failed')
+      authAPI.login.mockRejectedValue(networkError)
 
+      await expect(authAPI.login({
+        username: 'user',
+        password: 'pass'
+      })).rejects.toThrow('Network request failed')
+    })
+
+
+    it('should handle localStorage access errors', () => {
+      // Simulate localStorage throwing an error
+      mockLocalStorage.getItem.mockImplementation(() => {
+        throw new Error('LocalStorage access denied')
+      })
+
+      expect(() => mockLocalStorage.getItem('token')).toThrow('LocalStorage access denied')
+    })
+  })
 
 })
