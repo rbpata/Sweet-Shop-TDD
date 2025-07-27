@@ -60,3 +60,16 @@ def test_get_all_sweets(client, auth_headers):
     sweets = response.get_json()
     assert isinstance(sweets, list)
     assert any(s["name"] == "Barfi" for s in sweets)
+
+def test_search_sweet(client, auth_headers):
+    # Add a sweet first
+    client.post("/api/sweets", json=get_sample_sweet("Kaju Katli", 25), headers=auth_headers)
+    
+    # Search for it
+    response = client.get("/api/sweets/search?search=Kaju", headers=auth_headers)
+    print(f"Search response status: {response.status_code}")
+    print(f"Search response data: {response.get_json()}")
+    assert response.status_code == 200
+    results = response.get_json()
+    assert isinstance(results, list)
+    assert any("Kaju" in s["name"] for s in results)
