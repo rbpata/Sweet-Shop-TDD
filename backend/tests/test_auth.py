@@ -24,3 +24,9 @@ def test_register_success(client):
     })
     assert response.status_code == 201
     assert response.get_json()["msg"] == "User registered successfully"
+
+def test_register_duplicate(client):
+    # First registration
+    client.post("/api/auth/register", json={
+        "username": "testuser7", 
+    })
