@@ -32,3 +32,31 @@ def register():
     except Exception as e:
         db.session.rollback()
         return jsonify(msg="Registration failed"), 500
+
+@auth_bp.route("/login", methods=["POST"])
+def login():
+    try:
+        data = request.get_json()
+        
+        # Validate input
+        if not data or 'username' not in data or 'password' not in data:
+            return jsonify(msg="Username and password required"), 400
+        
+        username = data['username'].strip()
+        password = data['password']
+        
+        # Find user and check password
+        user = User.query.filter_by(username=username).first()
+        
+        if user and user.check_password(password):
+            # Create access token with string identity and admin claim
+            access_token = create_access_token(
+                identity=user.username, 
+                additional_claims={"is_admin": getattr(user, 'is_admin', False)}
+            )
+            return jsonify(access_token=access_token), 200
+        
+        return jsonify(msg="Invalid credentials"), 401
+        
+    except Exception as e:
+        return jsonify(msg="Login failed"), 500
