@@ -119,6 +119,28 @@ describe('API Services', () => {
         })
     })
 
+    describe('Inventory API', () => {
+        it('should purchase a sweet', async () => {
+            const sweetId = 1
+            const mockResponse = { message: 'Purchased successfully' }
+            inventoryAPI.purchaseSweet.mockResolvedValue(mockResponse)
 
+            const result = await inventoryAPI.purchaseSweet(sweetId)
+
+            expect(inventoryAPI.purchaseSweet).toHaveBeenCalledWith(sweetId)
+            expect(result).toEqual(mockResponse)
+        })
+
+        it('should restock a sweet', async () => {
+            const sweetId = 1
+            const mockResponse = { message: 'Restocked successfully' }
+            inventoryAPI.restockSweet.mockResolvedValue(mockResponse)
+
+            const result = await inventoryAPI.restockSweet(sweetId)
+
+            expect(inventoryAPI.restockSweet).toHaveBeenCalledWith(sweetId)
+            expect(result).toEqual(mockResponse)
+        })
+    })
 
 })
