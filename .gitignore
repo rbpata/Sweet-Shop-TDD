@@ -1,0 +1,52 @@
+# Root-level ignores
+node_modules/
+.env
+*.env
+.env.*
+.DS_Store
+Thumbs.db
+*.log
+*.pyc
+*.pyo
+__pycache__/
+*.swp
+*.lock
+*.pid
+*.tmp
+
+# Backend ignores
+backend/instance/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/venv/
+backend/env/
+backend/.env
+backend/.flaskenv
+backend/.mypy_cache/
+backend/migrations/
+backend/.coverage
+backend/htmlcov/
+backend/.coverage.*
+
+# Frontend ignores
+frontend/node_modules/
+frontend/.env
+frontend/.env.*
+frontend/dist/
+frontend/build/
+frontend/.DS_Store
+frontend/.vite/
+frontend/.eslintcache
+frontend/coverage/
+frontend/.parcel-cache/
+frontend/yarn.lock
+
+# Editor/IDE-specific ignores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Test-related
+.cache/
+test_output/
