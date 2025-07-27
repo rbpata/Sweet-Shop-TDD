@@ -131,7 +131,7 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess }) => {
           {/* Price Field */}
           <div>
             <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-              Price ($)
+              Price (₹)
             </label>
             <input
               id="price"
@@ -146,7 +146,7 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess }) => {
                 },
                 max: {
                   value: 1000,
-                  message: 'Price cannot exceed $1000',
+                  message: 'Price cannot exceed ₹1000',
                 },
               })}
               className="input-field"

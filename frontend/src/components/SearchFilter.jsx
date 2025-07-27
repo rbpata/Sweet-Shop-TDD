@@ -142,7 +142,7 @@ const SearchFilter = ({ filters, onFiltersChange, onClearFilters }) => {
             )}
             {filters.price_min && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                Min: ${filters.price_min}
+                Min: ₹{filters.price_min}
                 <button
                   onClick={() => handleInputChange('price_min', '')}
                   className="ml-2 hover:text-green-600"
@@ -153,7 +153,7 @@ const SearchFilter = ({ filters, onFiltersChange, onClearFilters }) => {
             )}
             {filters.price_max && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                Max: ${filters.price_max}
+                Max: ₹{filters.price_max}
                 <button
                   onClick={() => handleInputChange('price_max', '')}
                   className="ml-2 hover:text-green-600"

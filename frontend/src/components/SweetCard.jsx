@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { sweetsAPI } from '../services/api'
 import toast from 'react-hot-toast'
+
 import {
   ShoppingCart,
   Package,
   Edit,
   Trash2,
   Plus,
-  DollarSign,
+  IndianRupee,
   AlertTriangle,
 } from 'lucide-react'
 import EditSweetModal from './EditSweetModal'
@@ -125,7 +126,7 @@ const SweetCard = ({ sweet, onPurchase, onRestock, isAdmin }) => {
           
           {/* Stock Status Badge */}
           <div className="absolute top-3 right-3">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${stockStatus.bg} ${stockStatus.color}`}>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ₹{stockStatus.bg} ₹{stockStatus.color}`}>
               {stockStatus.label}
             </span>
           </div>
@@ -163,7 +164,7 @@ const SweetCard = ({ sweet, onPurchase, onRestock, isAdmin }) => {
           {/* Price and Stock */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-1">
-              <DollarSign className="w-4 h-4 text-primary-500" />
+              <IndianRupee className="w-4 h-4 text-primary-500" />
               <span className="text-xl font-bold text-primary-600">
                 {sweet.price.toFixed(2)}
               </span>
