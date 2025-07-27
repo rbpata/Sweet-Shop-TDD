@@ -61,3 +61,11 @@ def test_login_invalid_password(client):
     })
     assert response.status_code == 401
     assert response.get_json()["msg"] == "Invalid credentials"
+
+def test_login_nonexistent_user(client):
+    response = client.post("/api/auth/login", json={
+        "username": "demo",
+        "password": "ghostpass"
+    })
+    assert response.status_code == 401
+    assert response.get_json()["msg"] == "Invalid credentials"
