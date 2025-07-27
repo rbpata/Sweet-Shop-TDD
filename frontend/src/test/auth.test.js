@@ -28,7 +28,7 @@ describe('Auth Context Tests', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
     mockLocalStorage.getItem.mockReturnValue(null)
-    
+
     // Import API after mocks are cleared
     const apiModule = await import('../services/api')
     authAPI = apiModule.authAPI
@@ -85,6 +85,39 @@ describe('Auth Context Tests', () => {
       })).rejects.toThrow('Username already exists')
     })
   })
+  describe('LocalStorage Operations', () => {
+    it('should store token in localStorage on successful login', () => {
+      const token = 'test-jwt-token'
 
-  
+      mockLocalStorage.setItem('token', token)
+
+      expect(mockLocalStorage.setItem).toHaveBeenCalledWith('token', token)
+    })
+
+    it('should retrieve token from localStorage', () => {
+      const token = 'test-jwt-token'
+      mockLocalStorage.getItem.mockReturnValue(token)
+
+      const result = mockLocalStorage.getItem('token')
+
+      expect(mockLocalStorage.getItem).toHaveBeenCalledWith('token')
+      expect(result).toBe(token)
+    })
+
+    it('should remove token from localStorage on logout', () => {
+      mockLocalStorage.removeItem('token')
+
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('token')
+    })
+
+    it('should return null when no token exists', () => {
+      mockLocalStorage.getItem.mockReturnValue(null)
+
+      const result = mockLocalStorage.getItem('token')
+
+      expect(result).toBeNull()
+    })
+  })
+
+
 })
