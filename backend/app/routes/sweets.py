@@ -37,3 +37,28 @@ def get_sweets():
         "id": s.id, "name": s.name, "category": s.category,
         "price": s.price, "quantity": s.quantity
     } for s in sweets])
+    
+@sweet_bp.route("/search", methods=["GET"])
+@jwt_required()
+def search_sweets():
+    name = request.args.get("search") or request.args.get("name")
+    category = request.args.get("category")
+    price_min = request.args.get("price_min")
+    price_max = request.args.get("price_max")
+
+    query = Sweet.query
+    if name:
+        query = query.filter(Sweet.name.ilike(f"%{name}%"))
+    if category:
+        query = query.filter(Sweet.category == category)
+    if price_min:
+        query = query.filter(Sweet.price >= float(price_min))
+    if price_max:
+        query = query.filter(Sweet.price <= float(price_max))
+
+    results = query.all()
+    return jsonify([{
+        "id": s.id, "name": s.name, "category": s.category,
+        "price": s.price, "quantity": s.quantity
+    } for s in results])
+
