@@ -61,10 +61,13 @@ def test_get_all_sweets(client, auth_headers):
     assert isinstance(sweets, list)
     assert any(s["name"] == "Barfi" for s in sweets)
 
+
 def test_search_sweet(client, auth_headers):
     # Add a sweet first
-    client.post("/api/sweets", json=get_sample_sweet("Kaju Katli", 25), headers=auth_headers)
-    
+    client.post(
+        "/api/sweets", json=get_sample_sweet("Kaju Katli", 25), headers=auth_headers
+    )
+
     # Search for it
     response = client.get("/api/sweets/search?search=Kaju", headers=auth_headers)
     print(f"Search response status: {response.status_code}")
@@ -73,3 +76,20 @@ def test_search_sweet(client, auth_headers):
     results = response.get_json()
     assert isinstance(results, list)
     assert any("Kaju" in s["name"] for s in results)
+
+
+def test_update_sweet(client, auth_headers):
+    # Add a sweet first
+    add_response = client.post(
+        "/api/sweets", json=get_sample_sweet("Jalebi", 20), headers=auth_headers
+    )
+    assert add_response.status_code == 201
+
+    # Update the sweet (assuming it gets ID 1)
+    update_response = client.put(
+        "/api/sweets/1", json={"price": 22}, headers=auth_headers
+    )
+    print(f"Update response status: {update_response.status_code}")
+    print(f"Update response data: {update_response.get_json()}")
+    assert update_response.status_code == 200
+    assert update_response.get_json()["sweet"]["price"] == 22
