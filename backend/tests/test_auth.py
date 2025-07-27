@@ -49,3 +49,15 @@ def test_login_success(client):
     })
     assert response.status_code == 200
     assert "access_token" in response.get_json()
+    
+def test_login_invalid_password(client):
+    client.post("/api/auth/register", json={
+        "username": "testuser",
+        "password": "testpass"
+    })
+    response = client.post("/api/auth/login", json={
+        "username": "testuser",
+        "password": "wrongpass"
+    })
+    assert response.status_code == 401
+    assert response.get_json()["msg"] == "Invalid credentials"
