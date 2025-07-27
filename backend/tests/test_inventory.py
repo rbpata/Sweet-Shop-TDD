@@ -47,6 +47,15 @@ def user_token(app_with_context):
             additional_claims={"is_admin": False}
         )
 
+def test_debug_routes(app_with_context):
+    """Debug test to see what routes are registered"""
+    with app_with_context.app_context():
+        print("\n=== ALL REGISTERED ROUTES ===")
+        for rule in app_with_context.url_map.iter_rules():
+            print(f"Route: {rule.rule} | Methods: {rule.methods} | Endpoint: {rule.endpoint}")
+        print("=== END ROUTES ===\n")
+        assert True
+
 
 def test_purchase_sweet(client, admin_token):
     with client.application.app_context():
