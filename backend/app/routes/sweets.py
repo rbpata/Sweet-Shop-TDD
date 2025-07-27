@@ -5,6 +5,7 @@ from app.models import Sweet
 
 sweet_bp = Blueprint("sweet", __name__)
 
+
 @sweet_bp.route("", methods=["POST"])
 @jwt_required()
 def add_sweet():
@@ -20,7 +21,7 @@ def add_sweet():
             name=data["name"],
             category=data["category"],
             price=float(data["price"]),
-            quantity=int(data["quantity"])
+            quantity=int(data["quantity"]),
         )
         db.session.add(sweet)
         db.session.commit()
@@ -29,15 +30,25 @@ def add_sweet():
         db.session.rollback()
         return jsonify(msg="Failed to add sweet"), 500
 
+
 @sweet_bp.route("", methods=["GET"])
 @jwt_required()
 def get_sweets():
     sweets = Sweet.query.all()
-    return jsonify([{
-        "id": s.id, "name": s.name, "category": s.category,
-        "price": s.price, "quantity": s.quantity
-    } for s in sweets])
-    
+    return jsonify(
+        [
+            {
+                "id": s.id,
+                "name": s.name,
+                "category": s.category,
+                "price": s.price,
+                "quantity": s.quantity,
+            }
+            for s in sweets
+        ]
+    )
+
+
 @sweet_bp.route("/search", methods=["GET"])
 @jwt_required()
 def search_sweets():
@@ -57,8 +68,45 @@ def search_sweets():
         query = query.filter(Sweet.price <= float(price_max))
 
     results = query.all()
-    return jsonify([{
-        "id": s.id, "name": s.name, "category": s.category,
-        "price": s.price, "quantity": s.quantity
-    } for s in results])
+    return jsonify(
+        [
+            {
+                "id": s.id,
+                "name": s.name,
+                "category": s.category,
+                "price": s.price,
+                "quantity": s.quantity,
+            }
+            for s in results
+        ]
+    )
 
+
+@sweet_bp.route("/<int:id>", methods=["PUT"])
+@jwt_required()
+def update_sweet(id):
+    sweet = Sweet.query.get_or_404(id)
+    data = request.get_json()
+
+    try:
+        for key, value in data.items():
+            if key in ["price"]:
+                value = float(value)
+            elif key in ["quantity"]:
+                value = int(value)
+            setattr(sweet, key, value)
+
+        db.session.commit()
+        return jsonify(
+            message="Sweet updated",
+            sweet={
+                "id": sweet.id,
+                "name": sweet.name,
+                "category": sweet.category,
+                "price": sweet.price,
+                "quantity": sweet.quantity,
+            },
+        )
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(msg="Failed to update sweet"), 500
