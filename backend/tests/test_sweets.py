@@ -93,3 +93,15 @@ def test_update_sweet(client, auth_headers):
     print(f"Update response data: {update_response.get_json()}")
     assert update_response.status_code == 200
     assert update_response.get_json()["sweet"]["price"] == 22
+
+def test_delete_sweet(client, auth_headers):
+    # Add a sweet first
+    add_response = client.post("/api/sweets", json=get_sample_sweet("Peda", 10), headers=auth_headers)
+    assert add_response.status_code == 201
+    
+    # Delete the sweet
+    delete_response = client.delete("/api/sweets/1", headers=auth_headers)
+    print(f"Delete response status: {delete_response.status_code}")
+    print(f"Delete response data: {delete_response.get_json()}")
+    assert delete_response.status_code == 200
+    assert delete_response.get_json()["message"] == "Sweet deleted successfully"
