@@ -34,7 +34,6 @@ def client(app_with_context):
 @pytest.fixture
 def admin_token(app_with_context):
     with app_with_context.app_context():
-        # Create token with string identity and additional claims
         return create_access_token(
             identity="admin",
             additional_claims={"is_admin": True}
@@ -43,19 +42,20 @@ def admin_token(app_with_context):
 @pytest.fixture
 def user_token(app_with_context):
     with app_with_context.app_context():
-        # Create token for regular user
         return create_access_token(
             identity="user",
             additional_claims={"is_admin": False}
         )
+
 
 def test_purchase_sweet(client, admin_token):
     with client.application.app_context():
         sweet = Sweet.query.first()
         initial_quantity = sweet.quantity
         
+        # Using /api/inventory to match blueprint registration
         response = client.post(
-            f"/api/sweets/{sweet.id}/purchase", 
+            f"/api/inventory/{sweet.id}/purchase", 
             headers={"Authorization": f"Bearer {admin_token}"}
         )
         
