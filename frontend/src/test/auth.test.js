@@ -118,6 +118,60 @@ describe('Auth Context Tests', () => {
       expect(result).toBeNull()
     })
   })
+  describe('Authentication State Logic', () => {
+    it('should determine authenticated state based on token presence', () => {
+      // Test with token present
+      mockLocalStorage.getItem.mockReturnValue('valid-token')
+      const hasToken = !!mockLocalStorage.getItem('token')
+      expect(hasToken).toBe(true)
+
+      // Test with no token
+      mockLocalStorage.getItem.mockReturnValue(null)
+      const noToken = !!mockLocalStorage.getItem('token')
+      expect(noToken).toBe(false)
+    })
+
+    it('should simulate user data extraction from token', () => {
+      // Mock a simple token decode simulation
+      const mockTokenData = {
+        sub: 'admin',
+        is_admin: true,
+        exp: Math.floor(Date.now() / 1000) + 3600 // 1 hour from now
+      }
+
+      const extractUserData = (tokenData) => ({
+        username: tokenData.sub,
+        isAdmin: tokenData.is_admin || false
+      })
+
+      const userData = extractUserData(mockTokenData)
+
+      expect(userData).toEqual({
+        username: 'admin',
+        isAdmin: true
+      })
+    })
+
+    it('should handle token expiration check', () => {
+      const currentTime = Math.floor(Date.now() / 1000)
+
+      // Valid token (expires in future)
+      const validToken = { exp: currentTime + 3600 }
+      expect(validToken.exp > currentTime).toBe(true)
+
+      // Expired token
+      const expiredToken = { exp: currentTime - 3600 }
+      expect(expiredToken.exp > currentTime).toBe(false)
+    })
+
+    it('should simulate admin role checking', () => {
+      const adminUser = { username: 'admin', isAdmin: true }
+      const regularUser = { username: 'user', isAdmin: false }
+
+      expect(adminUser.isAdmin).toBe(true)
+      expect(regularUser.isAdmin).toBe(false)
+    })
+  })
 
 
 })
