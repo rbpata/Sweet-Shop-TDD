@@ -110,3 +110,22 @@ def update_sweet(id):
     except Exception as e:
         db.session.rollback()
         return jsonify(msg="Failed to update sweet"), 500
+
+
+@sweet_bp.route("/<int:id>", methods=["DELETE"])
+@jwt_required()
+def delete_sweet(id):
+    # Get the current user identity (string) and additional claims
+    current_user = get_jwt_identity()  # This will be "admin"
+    claims = get_jwt()  # This contains additional claims
+
+    # Check if user is admin from additional claims
+    is_admin = claims.get("is_admin", False)
+
+    if not is_admin:
+        return jsonify(msg="Admin only"), 403
+
+    sweet = Sweet.query.get_or_404(id)
+    db.session.delete(sweet)
+    db.session.commit()
+    return jsonify(message="Sweet deleted successfully"), 200

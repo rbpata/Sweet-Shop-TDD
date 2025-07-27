@@ -32,3 +32,8 @@ def update_sweet(sweet_id, data):
         setattr(sweet, key, value)
     db.session.commit()
     return sweet
+
+def delete_sweet(sweet_id):
+    sweet = Sweet.query.get_or_404(sweet_id)
+    db.session.delete(sweet)
+    db.session.commit()
