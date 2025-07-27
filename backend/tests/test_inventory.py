@@ -93,3 +93,24 @@ def test_purchase_out_of_stock(client, admin_token):
         
         assert response.status_code == 400
         assert response.get_json()["msg"] == "Out of stock"
+
+def test_restock_sweet_admin(client, admin_token):
+    with client.application.app_context():
+        sweet = Sweet.query.first()
+        initial_quantity = sweet.quantity
+        
+        # Using /api/inventory to match blueprint registration
+        response = client.post(
+            f"/api/inventory/{sweet.id}/restock", 
+            headers={"Authorization": f"Bearer {admin_token}"}
+        )
+        
+        print(f"Restock response status: {response.status_code}")
+        print(f"Restock response data: {response.get_json()}")
+        
+        assert response.status_code == 200
+        assert response.get_json()["msg"] == "Restocked successfully"
+        
+        # Check quantity was increased
+        updated_sweet = Sweet.query.get(sweet.id)
+        assert updated_sweet.quantity == initial_quantity + 1
