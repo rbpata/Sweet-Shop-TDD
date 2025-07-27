@@ -32,9 +32,20 @@ def test_register_duplicate(client):
     })
     # Second registration with SAME username (this should fail)
     response = client.post("/api/auth/register", json={
-        "username": "testuser7",  # Fixed: Same username to test duplicate
+        "username": "testuser7", 
         "password": "testpass"
     })
     assert response.status_code == 400
-    # Fixed: Check JSON response instead of bytes
     assert response.get_json()["msg"] == "User already exists"
+
+def test_login_success(client):
+    client.post("/api/auth/register", json={
+        "username": "testuser",
+        "password": "testpass"
+    })
+    response = client.post("/api/auth/login", json={
+        "username": "testuser",
+        "password": "testpass"
+    })
+    assert response.status_code == 200
+    assert "access_token" in response.get_json()
