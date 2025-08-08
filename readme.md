@@ -189,7 +189,7 @@ pytest tests/
 
 | Test Area        | Status    | Coverage |
 | ---------------- | --------  | -------- |
-| Auth Routes      | ✅ Passed | 80%     |
+| Auth Routes      | ✅ Passed | 100%     |
 | Inventory Routes | ✅ Passed | 100%     |
 | Sweet Routes     | ✅ Passed | 100%     |
 
@@ -242,7 +242,7 @@ All 23 tests passed across auth.test.js and api.test.js using Vitest with v8 cov
 
 | Modifying Sweets                                | Search & Filter Feature                         |
 | ----------------------------------------------- | ----------------------------------------------- |
-| ![Purchase Flow](screenshots/5.png) | ![Search Filter](screenshots/5.png) |
+| ![Purchase Flow](screenshots/5.png) | ![Search Filter](screenshots/6.png) |
 
 ---
 
